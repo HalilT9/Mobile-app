@@ -11,16 +11,9 @@ void main() {
   runApp(const CalorieTrackerApp());
 }
 
-/// Root widget that wires up Providers and app-wide theming.
-///
-/// Navigation is decided by [_AuthGate] based on persisted auth state.
 class CalorieTrackerApp extends StatelessWidget {
   const CalorieTrackerApp({super.key});
 
-  /// Builds a Material 3 theme for the given brightness.
-  ///
-  /// Primary/secondary are set explicitly (green/yellow) so the in-app branding
-  /// and gradients stay consistent.
   ThemeData _buildTheme(Brightness brightness) {
     const green = Color(0xFF2E7D32);
     const yellow = Color(0xFFFBC02D);
@@ -92,19 +85,16 @@ class _AuthGate extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<AuthProvider>(
       builder: (context, auth, child) {
-        // During startup we wait until SharedPreferences has been loaded.
         if (!auth.isReady) {
           return const Scaffold(
             body: Center(child: CircularProgressIndicator()),
           );
         }
 
-        // First launch (or after user switch) shows the login screen.
         if (!auth.isLoggedIn) {
           return const LoginScreen();
         }
 
-        // Main app shell: bottom navigation + camera FAB.
         return const TabScreen();
       },
     );
