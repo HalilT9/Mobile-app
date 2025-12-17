@@ -33,6 +33,9 @@ migrate_working_dir/
 /build/
 /coverage/
 
+# Local backups (do not commit)
+_backup_snapshot/
+
 # Symbolication related
 app.*.symbols
 
