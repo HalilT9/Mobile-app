@@ -1,0 +1,35 @@
+name: feedme
+description: FeedMe - AI assisted calorie tracking with camera input
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  
+  provider: ^6.0.5
+  intl: ^0.18.1
+  shared_preferences: ^2.2.2
+  cupertino_icons: ^1.0.2
+  http: ^1.1.0
+  image_picker: ^1.0.4
+
+  # --- BU SÜRÜMLERİ KULLAN (Kararlı Sürümler) ---
+  firebase_core: ^2.27.0
+  firebase_auth: ^4.17.4
+  google_sign_in: ^6.2.1  # <-- 7.2.0 yerine bunu kullanıyoruz!
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
+
+
+
+

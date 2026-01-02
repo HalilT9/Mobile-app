@@ -1,0 +1,6 @@
+Flask
+Flask-SQLAlchemy
+google-cloud-vision
+google-auth
+requests
+locust
