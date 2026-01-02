@@ -6,11 +6,11 @@ from huggingface_hub import InferenceClient
 import requests
 import io
 
-# --- AYARLAR ---
-# 1. Hugging Face Token (Senin kodundaki)
+# --- SETTİNGS ---
+# 1. Hugging Face Token 
 HUGGING_FACE_API_KEY = "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"
 
-# 2. API Ninjas Key (Senin kodundaki)
+# 2. API Ninjas Key 
 NUTRITION_API_KEY = "BzLvIP87zXQjWw8bCAvXSw==nINesLnvwBNBjJHt"
 
 # MODEL: Google ViT
@@ -28,34 +28,34 @@ def get_nutrition_info(query):
     """
     clean_query = query.split(',')[0].strip().lower()
     
-    # --- KURTARICI YEDEK LİSTE ---
+    # ---  ---
     backup_db = {
-        # Meyveler
+        # 
         "banana": 89, "apple": 52, "green apple": 50, "red apple": 55,
         "orange": 47, "mandarin": 53, "pomegranate": 83, "grape": 67,
         "strawberry": 32, "watermelon": 30, "melon": 34, "peach": 39,
         "pear": 57, "cherry": 50, "lemon": 29,
         
-        # Yemekler
+        # 
         "pizza": 266, "burger": 295, "hamburger": 295, "cheeseburger": 303,
         "fries": 312, "french fries": 312, "hot dog": 290, "sandwich": 250,
         "kebab": 200, "doner": 250, "chicken": 239, "meatball": 197,
         "pasta": 131, "rice": 130, "soup": 50, "steak": 271,
         
-        # Diğer
+        # 
         "bread": 265, "egg": 155, "cheese": 402, "yogurt": 59,
         "chocolate": 546, "cake": 371, "cookie": 502, "donut": 452,
         "salad": 20, "caesar salad": 44, "water": 0, "coke": 140, 
         "coffee": 2, "tea": 1, "milk": 42, "potato": 77
     }
     
-    # Su kontrolü
+    # 
     if "water" in clean_query or "bottle" in clean_query:
         return 0
 
     print(f"🔍 API'ye Soruluyor: '{clean_query}'")
     
-    # 1. API DENEMESİ
+    # 1. 
     api_url = 'https://api.api-ninjas.com/v1/nutrition?query=' + clean_query
     
     try:
@@ -79,15 +79,15 @@ def get_nutrition_info(query):
     except Exception as e:
         print(f"❌ API Bağlantı Hatası: {e}")
     
-    # 2. B PLANINA GEÇ (YEDEK LİSTE)
+    # 2. B PLAN
     print(f"🔄 Yedek Veritabanında aranıyor: '{clean_query}'...")
     
-    # Tam eşleşme
+    # 
     if clean_query in backup_db:
         print(f"💾 Yedek Listeden bulundu: {clean_query} -> {backup_db[clean_query]} kcal")
         return backup_db[clean_query]
     
-    # Benzer eşleşme (Örn: "slice of pizza" -> "pizza")
+    # 
     for key in backup_db:
         if key in clean_query or clean_query in key:
              print(f"💾 Yedek Listeden (Benzer) bulundu: {key} -> {backup_db[key]} kcal")
@@ -113,12 +113,12 @@ def analyze_image():
         return jsonify({"error": "Server file error"}), 500
 
     try:
-        # ADIM 2: Hugging Face Client
+        # 2:
         client = InferenceClient(token=HUGGING_FACE_API_KEY)
         
         print(f"⏳ Yapay Zeka ({MODEL_ID}) düşünüyor...")
         
-        # ADIM 3: Sınıflandırma
+        #  3: 
         results = client.image_classification(temp_filename, model=MODEL_ID)
         
         detected_food_name = "Unknown"
@@ -141,7 +141,7 @@ def analyze_image():
                  os.remove(temp_filename)
              return jsonify({"name": "Try Again", "calories": 0})
 
-        # ADIM 4: Kalori Bul
+        #  4: 
         calories = 0
         display_name = detected_food_name.split(',')[0].strip().capitalize()
         
@@ -152,7 +152,7 @@ def analyze_image():
         
         print(f"🏁 SONUÇ: {display_name} - {calories} kcal")
         
-        # ADIM 5: Temizlik
+        #  5: 
         if os.path.exists(temp_filename):
             os.remove(temp_filename)
         
@@ -167,19 +167,19 @@ def analyze_image():
             os.remove(temp_filename)
         return jsonify({"name": "Error", "calories": 0}), 500
 
-# --- Diğer Endpointler ---
+# 
 @app.route('/api/meals/add', methods=['POST'])
 def add_meal():
     data = request.json
     
-    # DÜZELTME: ID'yi karmaşık yazı (UUID) yerine BASİT SAYI (INT) yapıyoruz.
+    # 
     data['id'] = random.randint(1000, 999999) 
     
     meals.append(data)
     
     print(f"💾 Yemek Kaydedildi: {data.get('name')} (ID: {data['id']})")
     
-    # Kaydedilen veriyi (ID dahil) geri gönderiyoruz
+    # 
     return jsonify(data), 200
 
 @app.route('/api/meals', methods=['GET'])
@@ -190,5 +190,5 @@ def get_meals():
     return jsonify(meals)
 
 if __name__ == '__main__':
-    # debug=False yaparak otomatik resetlemeyi kapatıyoruz.
+    # 
     app.run(host='0.0.0.0', port=5000, debug=False)
